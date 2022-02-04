@@ -26,20 +26,56 @@ export const events = {
 	  });*/
 	  
 	  
-	  const formData = new FormData();
+	  console.log(file)
+	  
+	  var formData = new FormData();
 	  formData.append('item', file);
 	  
-	  axios.defaults.headers.post['Content-Type'] = "application/json";
+	  	  
+	  console.log(formData.get("item"));
 	  
-	  console.log(formData);
-	  
-	  axios.post("http://localhost:5000/post_test/", formData)
+	  /*axios.post("http://localhost:5000/post_test/", formData)
 	  .then(res => res.json())
+	  .then(res => console.log(res))
+	  .catch(function (error) {
+		  console.log(error.response);
+	  });*/
+	  
+	  
+	  axios({method: "post",
+			 url: "http://localhost:5000/post_test/",
+			 data: formData,
+			 headers: {"Accept": "application/json",
+					   "Content-Type": "multipart/form-data"}})
+	.then(res => res.json())
 	  .then(res => console.log(res))
 	  .catch(function (error) {
 		  console.log(error.response);
 	  });
 	  
+  },
+  uploadImages: function() {
+		var file = document.getElementById("images").files;
+						
+		var formData = new FormData();
+		
+		var arr = []
+		
+		for (var i = 0; i < file.length; i++){
+			formData.append("item", file[i]);
+		}					
+		
+		
+		axios({method: "post",
+			 url: "http://localhost:5000/post-images/",
+			 data: formData,
+			 headers: {"Accept": "application/json",
+					   "Content-Type": "multipart/form-data"}})
+	.then(res => res.json())
+	  .then(res => console.log(res))
+	  .catch(function (error) {
+		  console.log(error.response);
+	  });
   },
   loadUI: async function () {
     // Waiting for 1 second to allow UI elements to load

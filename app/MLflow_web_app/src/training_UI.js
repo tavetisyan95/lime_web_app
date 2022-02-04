@@ -216,8 +216,28 @@ function TrainingUI(props) {
 
 
 			<div className="ui_item">
-				<button id="upload_btn" onClick={(event) => {events.uploadFiles()}}>Upload</button> 
-			</div>		
+				<button id="upload_btn" onClick={(event) => {events.uploadFiles()}}>Upload model</button> 
+			</div>	
+
+
+			<div className="ui_item">
+				<fieldset className="fieldset">
+					<legend className="legend">Images</legend>
+					<div className="input">
+						<input type="file" id="images" multiple></input>
+					</div>
+					<button id="upload_image_button" onClick={(e) => {document.getElementById("images").click()}}>UPLOAD</button>
+					<div className="description">
+						<br></br>
+						<p>The data that will be used for training.</p>
+					</div>
+				</fieldset>
+			</div>
+
+
+			<div className="ui_item">
+				<button id="upload_images_btn" onClick={(event) => {events.uploadImages()}}>Upload images</button> 
+			</div>				
 			
 			
 			<div className="ui_item">

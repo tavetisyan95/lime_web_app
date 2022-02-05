@@ -45,35 +45,8 @@ function TrainingUI(props) {
 					</div>
 				</fieldset>
 			</div>
-		
-			<div className="ui_item">
-				<fieldset className="fieldset">
-					<legend className="legend">Model arch</legend>
-					<div className="input">
-						<input type="file" id="model_arch"></input>
-					</div>
-					<button id="data_shown" onClick={(e) => {document.getElementById("model_arch").click()}}>UPLOAD</button>
-					<div className="description">
-						<br></br>
-						<p>The data that will be used for training.</p>
-					</div>
-				</fieldset>
-			</div>  	
 
-
-			<div className="ui_item">
-				<fieldset className="fieldset">
-					<legend className="legend">Model weights</legend>
-					<div className="input">
-						<input type="file" id="model_weights"></input>
-					</div>
-					<button id="data_shown" onClick={(e) => {document.getElementById("model_weights").click()}}>UPLOAD</button>
-					<div className="description">
-						<br></br>
-						<p>The data that will be used for training.</p>
-					</div>
-				</fieldset>
-			</div>  	 					
+			 					
 
 
 			<div className="ui_item">
@@ -110,7 +83,7 @@ function TrainingUI(props) {
 				<fieldset className="fieldset">
 					<legend className="legend">Top predictions</legend>
 					<div className="input">
-						<input id="top_predictions" type="text" defaultValue="None"></input>
+						<input id="top_predictions" type="text" defaultValue="3"></input>
 					</div>
 					<div className="description">
 						<p className="type">Integer or None, default: None</p>
@@ -196,9 +169,23 @@ function TrainingUI(props) {
 		  
 		  
 			<div className="ui_item">
-				<button id="train_button" onClick={(event) => {events.handleParams()}}>Train Grid Search</button> 
+				<button id="train_button" onClick={(event) => {events.explain()}}>Explain</button> 
 			</div>		
 
+
+			<div className="ui_item">
+				<fieldset className="fieldset">
+					<legend className="legend">Model weights</legend>
+					<div className="input">
+						<input type="file" id="model_weights"></input>
+					</div>
+					<button id="data_shown" onClick={(e) => {document.getElementById("model_weights").click()}}>UPLOAD</button>
+					<div className="description">
+						<br></br>
+						<p>The data that will be used for training.</p>
+					</div>
+				</fieldset>
+			</div>  	
 
 			<div className="ui_item">
 				<fieldset className="fieldset">

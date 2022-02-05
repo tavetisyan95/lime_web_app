@@ -9,10 +9,39 @@ var fileArea;
 export const events = {
   // Function for loading global UI elements
   
-  
+  explain: function(){
+	   var imageIndices = document.getElementById("image_indices").value;
+	  var topLabels = document.getElementById("top_labels").value;
+	  var topPredictions = document.getElementById("top_predictions").value;
+	  
+	  var kernelSize = document.getElementById("kernel_size").value;
+	  var maxDist = document.getElementById("max_dist").value;
+	  
+	  
+	  var body = {explanation_params: {image_index: [imageIndices],
+									top_labels: topLabels,
+									top_predictions: topPredictions}, 
+			segmenter_params:{args: {algo_type: "quickshift",
+			kernel_size: kernelSize,
+			max_dist: maxDist}}}
+								
+	 axios({method: "post",
+			 url: "http://localhost:5000/explain/",
+			 data: JSON.stringify(body),
+			 headers: {"Content-Type": "application/json"}})
+	.then(res => res.json())
+	  .then(res => console.log(res))
+	  .catch(function (error) {
+		  console.log(error.response);
+	  });
+  },
   uploadFiles: function()
-  {
-	  var file = document.getElementById("model_arch").files[0];
+  {		  
+	 
+  
+  
+	  var arch = document.getElementById("model_arch").files[0];
+	  var weights = document.getElementById("model_weights").files[0];
 	  /*const formData = new FormData();
 	  formData.append('model_weights', file);
 	  
@@ -25,14 +54,9 @@ export const events = {
 		  console.log(error.response);
 	  });*/
 	  
-	  
-	  console.log(file)
-	  
 	  var formData = new FormData();
-	  formData.append('item', file);
-	  
-	  	  
-	  console.log(formData.get("item"));
+	  formData.append('weights', weights);
+	  formData.append('arch', arch);	  
 	  
 	  /*axios.post("http://localhost:5000/post_test/", formData)
 	  .then(res => res.json())
@@ -43,7 +67,7 @@ export const events = {
 	  
 	  
 	  axios({method: "post",
-			 url: "http://localhost:5000/post_test/",
+			 url: "http://localhost:5000/post-test/",
 			 data: formData,
 			 headers: {"Accept": "application/json",
 					   "Content-Type": "multipart/form-data"}})

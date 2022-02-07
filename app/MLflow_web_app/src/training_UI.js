@@ -98,10 +98,10 @@ function TrainingUI(props) {
 				<fieldset className="fieldset">
 					<legend className="legend">Labels to explain</legend>
 					<div className="input">
-						<input id="labels_to_explain" type="text" defaultValue="0"></input>
+						<input id="labels_to_explain" type="text" defaultValue="None"></input>
 					</div>
 					<div className="description">
-						<p className="type">Integer, default: 0</p>
+						<p className="type">Integers or None, default: None</p>
 						<br></br>
 						<p>The number of cross-validation folds for grid search.</p>
 					</div>

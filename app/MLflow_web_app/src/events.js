@@ -13,14 +13,16 @@ export const events = {
 	   var imageIndices = document.getElementById("image_indices").value;
 	  var topLabels = document.getElementById("top_labels").value;
 	  var topPredictions = document.getElementById("top_predictions").value;
+	  var labelsToExplain = document.getElementById("labels_to_explain").value;
 	  
 	  var kernelSize = document.getElementById("kernel_size").value;
 	  var maxDist = document.getElementById("max_dist").value;
 	  
 	  
-	  var body = {explanation_params: {image_index: [imageIndices],
+	  var body = {explanation_params: {image_index: imageIndices,
 									top_labels: topLabels,
-									top_predictions: topPredictions}, 
+									top_predictions: topPredictions,
+									labels_to_explain: labelsToExplain}, 
 			segmenter_params:{args: {algo_type: "quickshift",
 			kernel_size: kernelSize,
 			max_dist: maxDist}}}
@@ -67,7 +69,7 @@ export const events = {
 	  
 	  
 	  axios({method: "post",
-			 url: "http://localhost:5000/post-test/",
+			 url: "http://localhost:5000/post_test/",
 			 data: formData,
 			 headers: {"Accept": "application/json",
 					   "Content-Type": "multipart/form-data"}})

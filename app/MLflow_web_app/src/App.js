@@ -11,7 +11,9 @@ function App() {
 		<div className="App">
 			<p className="title">MLflow TRAINER</p>
 			<p className="subtitle">Select parameters for MLflow training.</p>
-				
+			{/*<img src="http://localhost:8080/test.jpg"></img>*/}
+			
+			
 			<div id="selector_mode_parent">				
 				<fieldset className="fieldset">
 					<legend className="legend">Mode</legend>

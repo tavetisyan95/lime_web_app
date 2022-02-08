@@ -10,22 +10,36 @@ export const events = {
   // Function for loading global UI elements
   
   explain: function(){
-	   var imageIndices = document.getElementById("image_indices").value;
+	  var imageIndices = document.getElementById("image_indices").value;
 	  var topLabels = document.getElementById("top_labels").value;
 	  var topPredictions = document.getElementById("top_predictions").value;
 	  var labelsToExplain = document.getElementById("labels_to_explain").value;
+	  var numSamples = document.getElementById("num_samples").value;
+	  var positiveOnly = document.getElementById("positive_only").checked;
+	  var negativeOnly = document.getElementById("negative_only").checked;
+	  var hideRest = document.getElementById("hide_rest").checked;
+	  var algoType = document.getElementById("selector_segmenter").value;
 	  
-	  var kernelSize = document.getElementById("kernel_size").value;
-	  var maxDist = document.getElementById("max_dist").value;
+	  var segmenterParams;
 	  
+	  if (algoType == "quickshift"){
+		  segmenterParams = events.handleQuickshift();
+	  } else if (algoType == "felzenszwalb"){
+		  segmenterParams = events.handleFelzenszwalb();
+	  } else if (algoType == "slic"){
+		  segmenterParams = events.handleSlic();
+	  } 
+	  	  
 	  
 	  var body = {explanation_params: {image_index: imageIndices,
 									top_labels: topLabels,
 									top_predictions: topPredictions,
-									labels_to_explain: labelsToExplain}, 
-			segmenter_params:{args: {algo_type: "quickshift",
-			kernel_size: kernelSize,
-			max_dist: maxDist}}}
+									labels_to_explain: labelsToExplain,
+									num_samples: numSamples,
+									positive_only: positiveOnly,
+									negative_only: negativeOnly,
+									hide_rest: hideRest}, 
+		segmenter_params:{args: segmenterParams}}
 								
 	 axios({method: "post",
 			 url: "http://localhost:5000/explain/",
@@ -36,6 +50,21 @@ export const events = {
 	  .catch(function (error) {
 		  console.log(error.response);
 	  });
+  },
+  handleQuickshift: function(){
+	  var ratio = document.getElementById("ratio").value;	  
+	  var kernelSize = document.getElementById("kernel_size").value;	  
+	  var maxDist = document.getElementById("max_dist").value;
+	  var sigma = document.getElementById("sigma_quickshift").value;
+	  var channelAxis = document.getElementById("channel_axis_quickshift").value;
+	  
+	  return {algo_type: "quickshift", ratio: ratio, kernel_size: kernelSize, max_dist: maxDist, sigma: sigma, channel_axis: channelAxis};
+  },
+  handleFelzenszwalb: function(){
+	  
+  },
+  handleSlic: function(){
+	  
   },
   uploadFiles: function()
   {		  

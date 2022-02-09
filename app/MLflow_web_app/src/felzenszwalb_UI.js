@@ -24,7 +24,7 @@ function FelzenszwalbUI(props){
 				<fieldset className="fieldset">
 					<legend className="legend">Sigma</legend>
 					<div className="input">
-						<input id="scale_felzenszwalb" type="text" defaultValue="0.8"></input>
+						<input id="sigma_felzenszwalb" type="text" defaultValue="0.8"></input>
 					</div>
 					<div className="description">
 						<p className="type">Float, default: 0.8</p>
@@ -38,8 +38,8 @@ function FelzenszwalbUI(props){
 				<div className="ui_item">
 				<fieldset className="fieldset">
 					<legend className="legend">Min size</legend>
-					<div className="min_size">
-						<input id="scale_felzenszwalb" type="text" defaultValue="20"></input>
+					<div className="input">
+						<input id="min_size" type="text" defaultValue="20"></input>
 					</div>
 					<div className="description">
 						<p className="type">Integer, default: 20</p>

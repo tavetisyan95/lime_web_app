@@ -19,9 +19,19 @@ export const events = {
 	  var negativeOnly = document.getElementById("negative_only").checked;
 	  var hideRest = document.getElementById("hide_rest").checked;
 	  var algoType = document.getElementById("selector_segmenter").value;
-	  
+	  	  	  
 	  var segmenterParams;
 	  
+	  var explanationPlot = document.getElementById("explanation_plot");	
+	
+	var	 explainButton = document.getElementById("explain_button");	
+     explainButton.style.visibility = "hidden"
+	 
+	 
+	 var responseArea = document.getElementById("response_explanation")
+	 
+	 responseArea.innerText = "Generating explanations..."
+	
 	  if (algoType == "quickshift"){
 		  segmenterParams = events.handleQuickshift();
 	  } else if (algoType == "felzenszwalb"){
@@ -40,16 +50,33 @@ export const events = {
 									negative_only: negativeOnly,
 									hide_rest: hideRest}, 
 		segmenter_params:{args: segmenterParams}}
-								
-	 axios({method: "post",
-			 url: "http://localhost:5000/explain/",
-			 data: JSON.stringify(body),
-			 headers: {"Content-Type": "application/json"}})
+	
+	fetch("http://localhost:5000/explain/",
+	{method: "POST",
+	headers: {"Content-Type": "application/json"},
+	body: JSON.stringify(body)
+	})
 	.then(res => res.json())
-	  .then(res => console.log(res))
+	 .then(res => {		  		  
+		  var img = document.createElement("img");
+		  img.src = "http://localhost:8080/test.jpg";		  
+		  explanationPlot.appendChild(img);
+		  
+		  explainButton.style.visibility = "visible"
+		  
+		  responseArea.innerText = "Explanations ready!"
+		  
+	  })
 	  .catch(function (error) {
 		  console.log(error.response);
+		  explainButton.style.visibility = "visible"
 	  });
+	  
+	  
+	  /*axios({method: "post",
+			 url: "http://localhost:5000/explain/",
+			 data: JSON.stringify(body),
+			 headers: {"Content-Type": "application/json"}})*/
   },
   handleQuickshift: function(){
 	  var ratio = document.getElementById("ratio").value;	  
@@ -61,18 +88,52 @@ export const events = {
 	  return {algo_type: "quickshift", ratio: ratio, kernel_size: kernelSize, max_dist: maxDist, sigma: sigma, channel_axis: channelAxis};
   },
   handleFelzenszwalb: function(){
+	  var scale = document.getElementById("scale").value;	  
+	  var sigma = document.getElementById("sigma_felzenszwalb").value;
+	  var minSize = document.getElementById("min_size").value;
+	  var channelAxis = document.getElementById("channel_axis_felzenszwalb").value;
 	  
+	  return {algo_type: "felzenszwalb", scale: scale, sigma: sigma, min_size: minSize, channel_axis: channelAxis};
   },
   handleSlic: function(){
+	  var nSegments = document.getElementById("n_segments").value;
+	  var compactness = document.getElementById("compactness").value;
+	  var maxNumIter = document.getElementById("max_num_iter").value;
+	  var sigma = document.getElementById("sigma_slic").value;
+	  var convert2Lab = document.getElementById("convert2lab").checked;
+	  var enforceConnectivity = document.getElementById("enforce_connectivity").checked;
+	  var minSizeFactor = document.getElementById("min_size_factor").value;
+	  var maxSizeFactor = document.getElementById("max_size_factor").value;
+	  var slicZero = document.getElementById("slic_zero").checked;
+	  var startLabel = document.getElementById("start_label").value;
+	  var channelAxis = document.getElementById("channel_axis_slic").value;
+	  
+	  return {algo_type: "slic", 
+	  n_segments: nSegments,
+	  compactness: compactness,	  
+	  max_num_iter: maxNumIter, 
+	  sigma: sigma, 
+	  convert2lab: convert2Lab,
+	  enforce_connectivity: enforceConnectivity,
+	  min_size_factor: minSizeFactor,
+	  max_size_factor: maxSizeFactor,
+	  slic_zero: slicZero,
+	  start_label: startLabel,
+	  channel_axis: channelAxis}
 	  
   },
-  uploadFiles: function()
+  uploadModel: function()
   {		  
 	 
   
   
 	  var arch = document.getElementById("model_arch").files[0];
 	  var weights = document.getElementById("model_weights").files[0];
+	  
+	  var uploadButton = document.getElementById("upload_model_btn");
+	  var responseArea = document.getElementById("response_model_upload");
+
+	  uploadButton.style.visibility = "hidden"
 	  /*const formData = new FormData();
 	  formData.append('model_weights', file);
 	  
@@ -97,21 +158,37 @@ export const events = {
 	  });*/
 	  
 	  
-	  axios({method: "post",
+	  /*axios({method: "post",
 			 url: "http://localhost:5000/post_test/",
 			 data: formData,
 			 headers: {"Accept": "application/json",
-					   "Content-Type": "multipart/form-data"}})
+					   "Content-Type": "multipart/form-data"}})*/
+					   
+					   
+	fetch("http://localhost:5000/upload-model/",
+	{method: "POST",	
+	body: formData
+	})
 	.then(res => res.json())
-	  .then(res => console.log(res))
+	  .then(res => {
+		  uploadButton.style.visibility = "visible";
+			responseArea.innerText = "Model loaded!"})
 	  .catch(function (error) {
 		  console.log(error.response);
+		  uploadButton.style.visibility = "visible"
 	  });
 	  
   },
   uploadImages: function() {
 		var file = document.getElementById("images").files;
-						
+		
+		var uploadButton = document.getElementById("upload_images_btn");
+		 var responseArea = document.getElementById("response_images_upload");
+		uploadButton.style.visibility = "hidden"
+		
+		
+		responseArea.innerText = "Uploading images..."
+		
 		var formData = new FormData();
 		
 		var arr = []
@@ -121,15 +198,22 @@ export const events = {
 		}					
 		
 		
-		axios({method: "post",
+		/*axios({method: "post",
 			 url: "http://localhost:5000/post-images/",
 			 data: formData,
 			 headers: {"Accept": "application/json",
-					   "Content-Type": "multipart/form-data"}})
+					   "Content-Type": "multipart/form-data"}})*/
+					   
+	fetch("http://localhost:5000/upload-images/",
+		{method: "POST",
+		body: formData})
 	.then(res => res.json())
-	  .then(res => console.log(res))
+	  .then(res => {uploadButton.style.visibility = "visible"
+	  responseArea.innerText = "Images uploaded!"})
 	  .catch(function (error) {
-		  console.log(error.response);
+		  //responseArea.innerText = "Something went wrong!"
+		  //uploadButton.style.visibility = "visible"
+		  
 	  });
   },
   loadUI: async function () {

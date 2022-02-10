@@ -22,6 +22,9 @@ export const events = {
 	  	  	  
 	  var segmenterParams;
 	  
+	  var img = document.getElementById("explanation_image");
+	  
+	  img.src = "";
 	  var explanationPlot = document.getElementById("explanation_plot");	
 	
 	var	 explainButton = document.getElementById("explain_button");	
@@ -58,9 +61,9 @@ export const events = {
 	})
 	.then(res => res.json())
 	 .then(res => {		  		  
-		  var img = document.createElement("img");
+		  //var img = document.createElement("img");
 		  img.src = "http://localhost:8080/test.jpg";		  
-		  explanationPlot.appendChild(img);
+		  //explanationPlot.appendChild(img);
 		  
 		  explainButton.style.visibility = "visible"
 		  

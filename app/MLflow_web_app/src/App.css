@@ -10,9 +10,10 @@ p {
 	background: transparent;
 }
 
-select
+img
 {
-
+	max-width: 75%;
+	height: auto;
 }
 
 html {

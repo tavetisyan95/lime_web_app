@@ -62,7 +62,7 @@ export const events = {
 	.then(res => res.json())
 	 .then(res => {		  		  
 		  //var img = document.createElement("img");
-		  img.src = "http://localhost:8080/test.jpg";		  
+		  img.src = "http://localhost:8080/explanation.jpg";		  
 		  //explanationPlot.appendChild(img);
 		  
 		  explainButton.style.visibility = "visible"

@@ -15,7 +15,8 @@ function ImageUploadUI(props){
 					<button id="upload_image_button" onClick={(e) => {document.getElementById("images").click()}}>UPLOAD</button>
 					<div className="description">
 						<br></br>
-						<p>The data that will be used for training.</p>
+						<p>The images that you want to generate explanations for.</p>
+						<p>RGB images expected, with -1 being the channel axis.</p>
 					</div>
 				</fieldset>
 			</div>

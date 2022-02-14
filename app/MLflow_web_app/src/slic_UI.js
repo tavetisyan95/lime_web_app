@@ -14,7 +14,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Integer, default: 100</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>The (approximate) number of labels in the segmented output image.</p>
 					</div>
 				</fieldset>
 				</div>
@@ -29,7 +29,8 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Float, default: 10.0</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Balances color proximity and space proximity. Higher values give more weight to space proximity, making superpixel shapes more square/cubic.</p> 
+						<p>In SLICO mode, this is the initial compactness.</p>
 					</div>
 				</fieldset>
 				</div>
@@ -43,7 +44,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Integer, default: 10</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Maximum number of iterations of k-means.</p>
 					</div>
 				</fieldset>
 				</div>
@@ -57,7 +58,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Float, default: 0</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Width of Gaussian smoothing kernel for pre-processing for each dimension of the image.</p>
 					</div>
 				</fieldset>
 				</div>
@@ -71,7 +72,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Bool, default: True</p>
 						<br></br>
-						<p>If False, the <i>cv_results_</i> attribute will not include training scores.</p>
+						<p>Whether the input should be converted to Lab colorspace prior to segmentation. The input image must be RGB.</p>
 					</div>
 				</fieldset>
 			</div>
@@ -85,7 +86,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Bool, default: True</p>
 						<br></br>
-						<p>If False, the <i>cv_results_</i> attribute will not include training scores.</p>
+						<p>Whether the generated segments are connected or not</p>
 					</div>
 				</fieldset>
 			</div>
@@ -100,7 +101,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Float, default: 0.5</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Proportion of the minimum segment size to be removed with respect to the supposed segment size</p>
 					</div>
 				</fieldset>
 				</div>
@@ -114,7 +115,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Float, default: 3</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Proportion of the maximum connected segment size. A value of 3 works in most of the cases.</p>
 					</div>
 				</fieldset>
 				</div>
@@ -130,7 +131,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Bool, default: False</p>
 						<br></br>
-						<p>If False, the <i>cv_results_</i> attribute will not include training scores.</p>
+						<p>Run SLIC-zero, the zero-parameter mode of SLIC.</p>
 					</div>
 				</fieldset>
 			</div>
@@ -145,7 +146,7 @@ function SlicUI(props){
 					<div className="description">
 						<p className="type">Integer, default: 0</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>The labels’ index start. Should be 0 or 1.</p>
 					</div>
 				</fieldset>
 				</div>

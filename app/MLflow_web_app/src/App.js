@@ -12,15 +12,15 @@ import SegmenterSelectorUI from "./segmenter_selector_UI.js"
 function App() {
 	return (
 		<div className="App">
-			<p className="title">MLflow TRAINER</p>
-			<p className="subtitle">Select parameters for MLflow training.</p>										
+			<p className="title">LIME EXPLANATION GENERATOR</p>
+			<p className="subtitle">Select parameters to generate image classification explanations with LIME.</p>										
 				
 			<div id="training_ui">
 				<br></br>
 				<br></br>
 				<br></br>
-				<p className="subtitle">MLFLOW AND GRID SEARCH PARAMETERS</p>
-				<p className="description">In this section, select your training data, the desired estimator, and tweak grid search parameters.</p>
+				<p className="subtitle">TENSORFLOW MODEL FILES</p>
+				<p className="description">In this section, upload your TF Keras model weights and architecture.</p>
 				<ModelUploadUI/>
 				<p className="subtitle">IMAGES</p>
 				<p className="description">In this section, select images that LIME should base explanations on.</p>

@@ -15,7 +15,8 @@ function ModelUploadUI(props){
 					<button id="data_shown" onClick={(e) => {document.getElementById("model_weights").click()}}>UPLOAD</button>
 					<div className="description">
 						<br></br>
-						<p>The data that will be used for training.</p>
+						<p>The weights of your model.</p>
+						<p>You can obtain the weights of a TF model by calling the method <i>save</i> of a trained <i>Model</i> or <i>Sequential</i> model.</p>
 					</div>
 				</fieldset>
 			</div>  	
@@ -29,7 +30,8 @@ function ModelUploadUI(props){
 					<button id="upload_button" onClick={(e) => {document.getElementById("model_arch").click()}}>UPLOAD</button>
 					<div className="description">
 						<br></br>
-						<p>The data that will be used for training.</p>
+						<p>The architecture of your model.</p>
+						<p>You can obtain the architecture of a TF model by calling the method <i>to_json</i> of a trained <i>Model</i> or <i>Sequential</i> model.</p>
 					</div>
 				</fieldset>
 			</div>

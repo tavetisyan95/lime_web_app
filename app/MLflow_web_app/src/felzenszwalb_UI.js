@@ -14,7 +14,7 @@ function FelzenszwalbUI(props){
 					<div className="description">
 						<p className="type">Float, default: 1.0</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Free parameter. Higher means larger clusters.</p>
 					</div>
 				</fieldset>
 				</div> 
@@ -29,7 +29,7 @@ function FelzenszwalbUI(props){
 					<div className="description">
 						<p className="type">Float, default: 0.8</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Width (standard deviation) of Gaussian kernel used in preprocessing.</p>
 					</div>
 				</fieldset>
 				</div> 
@@ -38,13 +38,13 @@ function FelzenszwalbUI(props){
 				<div className="ui_item">
 				<fieldset className="fieldset">
 					<legend className="legend">Min size</legend>
-					<div className="input">
-						<input id="min_size" type="text" defaultValue="20"></input>
+					<div className="min_size">
+						<input id="scale_felzenszwalb" type="text" defaultValue="20"></input>
 					</div>
 					<div className="description">
 						<p className="type">Integer, default: 20</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Minimum component size. Enforced using postprocessing.</p>
 					</div>
 				</fieldset>
 				</div>

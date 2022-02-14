@@ -41,7 +41,7 @@ function SegmenterSelectorUI(props){
 					
 					<div className="description">
 						<br></br>
-						<p>The scikit-learn estimator that you want to train.</p>
+						<p>The segmentation algorithm you want to use to segment image explanations.</p>
 					</div>
 				</fieldset>
 			</div>

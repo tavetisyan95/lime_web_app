@@ -17,9 +17,11 @@ function ExplanationUI(props) {
 						<input id="image_indices" type="text" defaultValue="0"></input>
 					</div>
 					<div className="description">
-						<p className="type">String, default: Experiment</p>
+						<p className="type">Integer or list of integers, default: 0</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>The indices of the uploaded images that you want to explain.</p>
+						<p>Multiple values can be entered.</p>
+						<p>Separate each value with a comma, e.g. <i>"0, 1, 2, ...".</i></p>
 					</div>
 				</fieldset>
 			</div> 
@@ -29,12 +31,12 @@ function ExplanationUI(props) {
 				<fieldset className="fieldset">
 					<legend className="legend">Top labels</legend>
 					<div className="input">
-						<input id="top_labels" type="text" defaultValue="3"></input>
+						<input id="top_labels" type="text" defaultValue="10"></input>
 					</div>
 					<div className="description">
-						<p className="type">Integer, default: 3</p>
+						<p className="type">Integer, default: 10</p>
 						<br></br>
-						<p>The number of CPU cores that will be used during training.</p>
+						<p>The number of predictions with the highest probabilities that LIME should produce explanations for.</p>
 					</div>
 				</fieldset>
 			</div>
@@ -47,9 +49,9 @@ function ExplanationUI(props) {
 						<input id="top_predictions" type="text" defaultValue="3"></input>
 					</div>
 					<div className="description">
-						<p className="type">Integer or None, default: None</p>
+						<p className="type">Integer, default: 3</p>
 						<br></br>
-						<p>The number of cross-validation folds for grid search.</p>
+						<p>The number of predictions with the highest probabilities that you want to see explanations for.</p>
 					</div>
 				</fieldset>
 			</div>	  
@@ -64,7 +66,8 @@ function ExplanationUI(props) {
 					<div className="description">
 						<p className="type">Integers or None, default: None</p>
 						<br></br>
-						<p>The number of cross-validation folds for grid search.</p>
+						<p>The labels with respect to which you want to see explanations for.</p>
+						<p>If <i>None</i>, explanations for top predictions will be produced instead.</p>
 					</div>
 				</fieldset>
 			</div>	  
@@ -79,7 +82,7 @@ function ExplanationUI(props) {
 					<div className="description">
 						<p className="type">Integer, default: 250</p>
 						<br></br>
-						<p>The number of cross-validation folds for grid search.</p>
+						<p>The size of the neighborhood data to generate for explanations.</p>
 					</div>
 				</fieldset>
 			</div>	  
@@ -93,7 +96,7 @@ function ExplanationUI(props) {
 					<div className="description">
 						<p className="type">Bool, default: True</p>
 						<br></br>
-						<p>If False, the <i>cv_results_</i> attribute will not include training scores.</p>
+						<p>Whether to only highlight positive areas in the explanations.</p>
 					</div>
 				</fieldset>
 			</div>
@@ -108,7 +111,7 @@ function ExplanationUI(props) {
 					<div className="description">
 						<p className="type">Bool, default: False</p>
 						<br></br>
-						<p>If False, the <i>cv_results_</i> attribute will not include training scores.</p>
+						<p>Whether to only highlight negative areas in the explanations.</p>
 					</div>
 				</fieldset>
 			</div>
@@ -123,7 +126,9 @@ function ExplanationUI(props) {
 					<div className="description">
 						<p className="type">Bool, default: False</p>
 						<br></br>
-						<p>If False, the <i>cv_results_</i> attribute will not include training scores.</p>
+						<p>Whether to hide irrelevant areas in the explanations.</p>
+						<p>If <i>positive_only=True</i>, will only show positive areas.</p>
+						<p>If <i>negative_only=True</i>, will only show negative areas.</p>
 					</div>
 				</fieldset>
 			</div>
@@ -142,7 +147,7 @@ function ExplanationUI(props) {
 				<fieldset className="fieldset">
 					<legend align="center" className="legend">RESPONSE</legend>
 					<div className="text" id="response_explanation">
-						Waiting for training to start...
+						Waiting for user input...
 					</div>        
 				</fieldset>
 			</div>		  

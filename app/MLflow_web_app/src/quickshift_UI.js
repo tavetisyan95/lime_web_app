@@ -15,7 +15,7 @@ function QuickshiftUI(props){
 					<div className="description">
 						<p className="type">Float, default: 1.0</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Balances color-space proximity and image-space proximity. Higher values give more weight to color-space..</p>
 					</div>
 				</fieldset>
 				</div> 
@@ -29,7 +29,7 @@ function QuickshiftUI(props){
 					<div className="description">
 						<p className="type">Float, default: 1.0</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Width of Gaussian kernel used in smoothing the sample density. Higher means fewer clusters.</p>
 					</div>
 				</fieldset>
 			</div> 
@@ -44,7 +44,7 @@ function QuickshiftUI(props){
 					<div className="description">
 						<p className="type">Float, default: 10</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Cut-off point for data distances. Higher means fewer clusters.</p>
 					</div>
 				</fieldset>
 			</div> 
@@ -59,7 +59,7 @@ function QuickshiftUI(props){
 					<div className="description">
 						<p className="type">Float, default: 0</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>Width for Gaussian smoothing as preprocessing. Zero means no smoothing.</p>
 					</div>
 				</fieldset>
 			</div> 
@@ -74,7 +74,7 @@ function QuickshiftUI(props){
 					<div className="description">
 						<p className="type">Integer, default: -1</p>
 						<br></br>
-						<p>The name of the MLflow experiment that the run will be logged to.</p>
+						<p>The axis of image corresponding to color channels.</p>
 					</div>
 				</fieldset>
 			</div> 

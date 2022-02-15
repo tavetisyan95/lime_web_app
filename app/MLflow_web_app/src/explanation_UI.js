@@ -5,11 +5,6 @@ function ExplanationUI(props) {
 	return (
 		<div className="UI_wrapper">
 
-			
-
-			 					
-
-
 			<div className="ui_item">
 				<fieldset className="fieldset">
 					<legend className="legend">Image indices</legend>
@@ -137,12 +132,7 @@ function ExplanationUI(props) {
 			<div className="ui_item">
 				<button id="explain_button" onClick={(event) => {events.explain()}}>Explain</button> 
 			</div>		
-	
-
-
-					
-			
-			
+				
 			<div className="ui_item">
 				<fieldset className="fieldset">
 					<legend align="center" className="legend">RESPONSE</legend>
@@ -151,6 +141,7 @@ function ExplanationUI(props) {
 					</div>        
 				</fieldset>
 			</div>		  
+			
 		</div>
   );
 }

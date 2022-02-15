@@ -1,9 +1,9 @@
-flask
-flask_restful
-flask_cors
-mlflow
-scikit-learn
-dask
-dask_ml
+fastapi
+python-multipart
+pydantic
+aiofiles
+matplotlib
+tensorflow
 numpy
 pandas
+git+https://github.com/marcotcr/lime.git

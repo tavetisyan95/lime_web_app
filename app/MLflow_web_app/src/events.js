@@ -1,223 +1,245 @@
 import { config } from "./config.js";
-import papa from "papaparse";
 import axios from "axios";
 
-// Variable for a UI box that will display the names of existing CSV files
-// that contain predictions
-var fileArea;
-
 export const events = {
-  // Function for loading global UI elements  
-  explain: function(){
-	  var imageIndices = document.getElementById("image_indices").value;
-	  var topLabels = document.getElementById("top_labels").value;
-	  var topPredictions = document.getElementById("top_predictions").value;
-	  var labelsToExplain = document.getElementById("labels_to_explain").value;
-	  var numSamples = document.getElementById("num_samples").value;
-	  var positiveOnly = document.getElementById("positive_only").checked;
-	  var negativeOnly = document.getElementById("negative_only").checked;
-	  var hideRest = document.getElementById("hide_rest").checked;
-	  var algoType = document.getElementById("selector_segmenter").value;
-	  	  	  
-	  var segmenterParams;
-	  
-	  var img = document.getElementById("explanation_image");
-	  
-	  img.src = "";
-	  var explanationPlot = document.getElementById("explanation_plot");	
+	// Function for generating and showing explanations  
+	explain: function(){		
+		// Getting parameters for LIME
+		var imageIndices = document.getElementById("image_indices").value;
+		var topLabels = document.getElementById("top_labels").value;
+		var topPredictions = document.getElementById("top_predictions").value;
+		var labelsToExplain = document.getElementById("labels_to_explain").value;
+		var numSamples = document.getElementById("num_samples").value;
+		var positiveOnly = document.getElementById("positive_only").checked;
+		var negativeOnly = document.getElementById("negative_only").checked;
+		var hideRest = document.getElementById("hide_rest").checked;
+		var algoType = document.getElementById("selector_segmenter").value;
+
+		// Getting parameters for the segmentation algorithm
+		var segmenterParams;
+
+		// Getting the object that will store the explanations
+		var img = document.getElementById("explanation_image");
 	
-	var	 explainButton = document.getElementById("explain_button");	
-     explainButton.style.visibility = "hidden"
+
+		// Removing any old explanations
+		img.src = "";	
+		
+		// Getting the Explain button and hiding it
+		var	 explainButton = document.getElementById("explain_button");	
+		explainButton.style.visibility = "hidden"
+		
+		// Getting the area that displays status messages for explanations
+		var responseArea = document.getElementById("response_explanation")
 	 
-	 
-	 var responseArea = document.getElementById("response_explanation")
-	 
-	 responseArea.innerText = "Generating explanations..."
+	 	// Changing the status message to indicate that explanations are being generated
+		responseArea.innerText = "Generating explanations..."
 	
-	  if (algoType == "quickshift"){
-		  segmenterParams = events.handleQuickshift();
-	  } else if (algoType == "felzenszwalb"){
-		  segmenterParams = events.handleFelzenszwalb();
-	  } else if (algoType == "slic"){
-		  segmenterParams = events.handleSlic();
-	  } 
-	  	  
-	  
-	  var body = {explanation_params: {image_index: imageIndices,
-									top_labels: topLabels,
-									top_predictions: topPredictions,
-									labels_to_explain: labelsToExplain,
-									num_samples: numSamples,
-									positive_only: positiveOnly,
-									negative_only: negativeOnly,
-									hide_rest: hideRest}, 
-		segmenter_params:{args: segmenterParams}}
-	
-	fetch("http://localhost:5000/explain/",
-	{method: "POST",
-	headers: {"Content-Type": "application/json"},
-	body: JSON.stringify(body)
-	})
-	.then(res => res.json())
-	 .then(res => {		  		  
-		  //var img = document.createElement("img");
-		  img.src = "http://localhost:8080/explanation.jpg";		  
-		  //explanationPlot.appendChild(img);
+		// Check which segmenter was requested and handle parameters appropriately
+		if (algoType == "quickshift"){
+			segmenterParams = events.handleQuickshift();
+		} else if (algoType == "felzenszwalb"){
+			segmenterParams = events.handleFelzenszwalb();
+		} else if (algoType == "slic"){
+			segmenterParams = events.handleSlic();
+		} 
+	  	
+
+		
+		// Storing all arguments in a body
+	    var body = {explanation_params: {image_index: imageIndices,
+										top_labels: topLabels,
+										top_predictions: topPredictions,
+										labels_to_explain: labelsToExplain,
+										num_samples: numSamples,
+										positive_only: positiveOnly,
+										negative_only: negativeOnly,
+										hide_rest: hideRest}, 
+					segmenter_params:{args: segmenterParams}}
+			
+		// Sending a request to the server to generate explanations
+		fetch("http://" + config.api_url + ":" + config.api_port + config.api_explain_endpoint,
+				{method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify(body)
+		})	
+	 	.then(() => {
+			// Displaying the explanation
+			img.src = "http://" + config.api_url + ":" + config.http_server_port + "/explanation.jpg/";  
+		  	
+			// Making the Explain button visible
+			explainButton.style.visibility = "visible"
+			
+			// Dispalying a success message
+			responseArea.innerText = "Explanations ready!"
 		  
-		  explainButton.style.visibility = "visible"
-		  
-		  responseArea.innerText = "Explanations ready!"
-		  
-	  })
-	  .catch(function (error) {
-		  console.log(error.response);
-		  explainButton.style.visibility = "visible"
-	  });
+	  	})
+	  	.catch(error => {		  
+			console.error('Error: ', error);
+			explainButton.style.visibility = "visible"		  
+		  	responseArea.innerText = "Something went wrong!"
+	  	});
 	  
 	  
 	  /*axios({method: "post",
 			 url: "http://localhost:5000/explain/",
 			 data: JSON.stringify(body),
 			 headers: {"Content-Type": "application/json"}})*/
-  },
-  handleQuickshift: function(){
-	  var ratio = document.getElementById("ratio").value;	  
-	  var kernelSize = document.getElementById("kernel_size").value;	  
-	  var maxDist = document.getElementById("max_dist").value;
-	  var sigma = document.getElementById("sigma_quickshift").value;
-	  var channelAxis = document.getElementById("channel_axis_quickshift").value;
-	  
-	  return {algo_type: "quickshift", ratio: ratio, kernel_size: kernelSize, max_dist: maxDist, sigma: sigma, channel_axis: channelAxis};
-  },
-  handleFelzenszwalb: function(){
-	  var scale = document.getElementById("scale").value;	  
-	  var sigma = document.getElementById("sigma_felzenszwalb").value;
-	  var minSize = document.getElementById("min_size").value;
-	  var channelAxis = document.getElementById("channel_axis_felzenszwalb").value;
-	  
-	  return {algo_type: "felzenszwalb", scale: scale, sigma: sigma, min_size: minSize, channel_axis: channelAxis};
-  },
-  handleSlic: function(){
-	  var nSegments = document.getElementById("n_segments").value;
-	  var compactness = document.getElementById("compactness").value;
-	  var maxNumIter = document.getElementById("max_num_iter").value;
-	  var sigma = document.getElementById("sigma_slic").value;
-	  var convert2Lab = document.getElementById("convert2lab").checked;
-	  var enforceConnectivity = document.getElementById("enforce_connectivity").checked;
-	  var minSizeFactor = document.getElementById("min_size_factor").value;
-	  var maxSizeFactor = document.getElementById("max_size_factor").value;
-	  var slicZero = document.getElementById("slic_zero").checked;
-	  var startLabel = document.getElementById("start_label").value;
-	  var channelAxis = document.getElementById("channel_axis_slic").value;
-	  
-	  return {algo_type: "slic", 
-	  n_segments: nSegments,
-	  compactness: compactness,	  
-	  max_num_iter: maxNumIter, 
-	  sigma: sigma, 
-	  convert2lab: convert2Lab,
-	  enforce_connectivity: enforceConnectivity,
-	  min_size_factor: minSizeFactor,
-	  max_size_factor: maxSizeFactor,
-	  slic_zero: slicZero,
-	  start_label: startLabel,
-	  channel_axis: channelAxis}
-	  
-  },
-  uploadModel: function()
-  {		  
-	 
-  
-  
-	  var arch = document.getElementById("model_arch").files[0];
-	  var weights = document.getElementById("model_weights").files[0];
-	  
-	  var uploadButton = document.getElementById("upload_model_btn");
-	  var responseArea = document.getElementById("response_model_upload");
+	},
+  	// Function for uploading model files 
+  	uploadModel: function(){
+		  // Getting the model architecture and weights		  
+		var arch = document.getElementById("model_arch").files[0];
+		var weights = document.getElementById("model_weights").files[0];
+		
+		// Getting the Upload button and response area
+		var uploadButton = document.getElementById("upload_model_btn");
+		var responseArea = document.getElementById("response_model_upload");
 
-	  uploadButton.style.visibility = "hidden"
-	  /*const formData = new FormData();
-	  formData.append('model_weights', file);
-	  
-	  axios.defaults.headers.post['Content-Type'] = "application/json";
-	  
-	  axios.post("http://localhost:5000/post/", formData)
-	  .then(res => res.json())
-	  .then(res => console.log(res))
-	  .catch(function (error) {
-		  console.log(error.response);
-	  });*/
-	  
-	  var formData = new FormData();
-	  formData.append('weights', weights);
-	  formData.append('arch', arch);	  
-	  
-	  /*axios.post("http://localhost:5000/post_test/", formData)
-	  .then(res => res.json())
-	  .then(res => console.log(res))
-	  .catch(function (error) {
-		  console.log(error.response);
-	  });*/
-	  
-	  
-	  /*axios({method: "post",
-			 url: "http://localhost:5000/post_test/",
-			 data: formData,
-			 headers: {"Accept": "application/json",
-					   "Content-Type": "multipart/form-data"}})*/
-					   
-					   
-	fetch("http://localhost:5000/upload-model/",
-	{method: "POST",	
-	body: formData
-	})
-	.then(res => res.json())
-	  .then(res => {
-		  uploadButton.style.visibility = "visible";
-			responseArea.innerText = "Model loaded!"})
-	  .catch(function (error) {
-		  console.log(error.response);
-		  uploadButton.style.visibility = "visible"
-	  });
-	  
-  },
-  uploadImages: function() {
-		var file = document.getElementById("images").files;
-		
-		var uploadButton = document.getElementById("upload_images_btn");
-		 var responseArea = document.getElementById("response_images_upload");
+		// Hiding the Upload button and updating the status message
 		uploadButton.style.visibility = "hidden"
+		responseArea.innerText = "Uploading model..."
 		
+		/*
+		axios.defaults.headers.post['Content-Type'] = "application/json";
 		
-		responseArea.innerText = "Uploading images..."
+		axios.post("http://localhost:5000/post/", formData)
+		.then(res => res.json())
+		.then(res => console.log(res))
+		.catch(function (error) {
+			console.log(error.response);
+		});*/
 		
+		// Creating form data and adding the model files under the required keys
 		var formData = new FormData();
+		formData.append('weights', weights);
+		formData.append('arch', arch);	  
 		
-		var arr = []
-		
-		for (var i = 0; i < file.length; i++){
-			formData.append("item", file[i]);
-		}					
+		/*axios.post("http://localhost:5000/post_test/", formData)
+		.then(res => res.json())
+		.then(res => console.log(res))
+		.catch(function (error) {
+			console.log(error.response);
+		});*/
 		
 		
 		/*axios({method: "post",
-			 url: "http://localhost:5000/post-images/",
+				url: "http://localhost:5000/post_test/",
+				data: formData,
+				headers: {"Accept": "application/json",
+						"Content-Type": "multipart/form-data"}})*/
+						
+		// Uploading the model files to the server		   
+		var url = "http://" + config.api_url + ":" + config.api_port + config.api_model_upload_endpoint
+		
+		console.log(url);
+
+		fetch("http://" + config.api_url + ":" + config.api_port + config.api_model_upload_endpoint,
+				{method: "POST",	
+				body: formData
+		})	
+		.then(() => {
+			// Making the Upload button visible
+			uploadButton.style.visibility = "visible";
+
+			// Showing a success message
+			responseArea.innerText = "Model loaded!"})
+		.catch(error => {		  
+			console.error('Error: ', error);
+			uploadButton.style.visibility = "visible"
+			responseArea.innerText = "Something went wrong!"
+		});	  
+  	},
+  	// Function for uploading images
+	uploadImages: function() {	  
+	  	// Getting uploaded image files
+		var file = document.getElementById("images").files;
+		
+		// Getting the image Upload button and response area
+		var uploadButton = document.getElementById("upload_images_btn");
+		var responseArea = document.getElementById("response_images_upload");
+
+		// Hiding the image Upload button and changing the status message
+		uploadButton.style.visibility = "hidden"				
+		responseArea.innerText = "Uploading images..."
+		
+		// Adding the image files to a form under a single "images" key
+		var formData = new FormData();							
+		for (var i = 0; i < file.length; i++){
+			formData.append("images", file[i]);
+		}					
+		
+		
+		axios({method: "post",
+			 url: "http://" + config.api_url + ":" + config.api_port + config.api_image_upload_endpoint,
 			 data: formData,
 			 headers: {"Accept": "application/json",
-					   "Content-Type": "multipart/form-data"}})*/
+					   "Content-Type": "multipart/form-data"}})
 					   
-	fetch("http://localhost:5000/upload-images/",
-		{method: "POST",
-		body: formData})
-	.then(res => res.json())
-	  .then(res => {uploadButton.style.visibility = "visible"
-	  responseArea.innerText = "Images uploaded!"})
-	  .catch(function (error) {
-		  //responseArea.innerText = "Something went wrong!"
-		  //uploadButton.style.visibility = "visible"
+		/*fetch("http://localhost:5000/upload-images/",
+			{method: "POST",
+			body: formData})*/		
+		.then(() => {
+			// Making the image Upload button visible
+			uploadButton.style.visibility = "visible"
+
+			// Showing a success message
+	  		responseArea.innerText = "Images uploaded!"})
+	  	.catch(function (error) {
+			    console.log(error.response)
+			    responseArea.innerText = "Something went wrong!"
+				uploadButton.style.visibility = "visible"
 		  
 	  });
-  },
+	},
+	// Function for handling quickshift arguments
+  	handleQuickshift: function(){
+		// Getting the argument values
+		var ratio = document.getElementById("ratio").value;	  
+		var kernelSize = document.getElementById("kernel_size").value;	  
+		var maxDist = document.getElementById("max_dist").value;
+		var sigma = document.getElementById("sigma_quickshift").value;		
+	  
+		// Returning the argument values
+	  	return {algo_type: "quickshift", ratio: ratio, kernel_size: kernelSize, max_dist: maxDist, sigma: sigma};
+  	},
+	// Function for handling felzenszwalb arguments
+  	handleFelzenszwalb: function(){
+		// Getting the argument values
+		var scale = document.getElementById("scale").value;	  
+		var sigma = document.getElementById("sigma_felzenszwalb").value;
+		var minSize = document.getElementById("min_size").value;
+		
+		// Returning the argument values
+		return {algo_type: "felzenszwalb", scale: scale, sigma: sigma, min_size: minSize};
+  	},
+	// Function for handling slic arguments
+	handleSlic: function(){
+		// Getting the argument values
+		var nSegments = document.getElementById("n_segments").value;
+		var compactness = document.getElementById("compactness").value;
+		var maxNumIter = document.getElementById("max_num_iter").value;
+		var sigma = document.getElementById("sigma_slic").value;
+		var convert2Lab = document.getElementById("convert2lab").checked;
+		var enforceConnectivity = document.getElementById("enforce_connectivity").checked;
+		var minSizeFactor = document.getElementById("min_size_factor").value;
+		var maxSizeFactor = document.getElementById("max_size_factor").value;
+		var slicZero = document.getElementById("slic_zero").checked;
+		var startLabel = document.getElementById("start_label").value;		
+		
+		// Returning the arguments
+		return {algo_type: "slic", 
+		n_segments: nSegments,
+		compactness: compactness,	  
+		max_num_iter: maxNumIter, 
+		sigma: sigma, 
+		convert2lab: convert2Lab,
+		enforce_connectivity: enforceConnectivity,
+		min_size_factor: minSizeFactor,
+		max_size_factor: maxSizeFactor,
+		slic_zero: slicZero,
+		start_label: startLabel}	  
+  },  
   /*
   toggle_train_state : {},
   toggle_choice : "Classification",

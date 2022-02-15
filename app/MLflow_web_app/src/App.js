@@ -22,15 +22,28 @@ function App() {
 				<p className="subtitle">TENSORFLOW MODEL FILES</p>
 				<p className="description">In this section, upload your TF Keras model weights and architecture.</p>
 				<ModelUploadUI/>
+
+
+				<br></br>
+				<br></br>
+				<br></br>
 				<p className="subtitle">IMAGES</p>
 				<p className="description">In this section, select images that LIME should base explanations on.</p>
 				<ImageUploadUI/>
+
+				<br></br>
+				<br></br>
+				<br></br>
 				<p className="subtitle">SEGMENTER</p>
 				<p className="description">In this section, select the desired segmenter algorithm and its parameters.</p>
 				<SegmenterSelectorUI/>
 				{<QuickshiftUI/>}
 				{<FelzenszwalbUI/>}
 				{<SlicUI/>}
+
+				<br></br>
+				<br></br>
+				<br></br>
 				<p className="subtitle">EXPLAINER</p>
 				<p className="description">In this section, select the desired parameters for explanation plotting.</p>
 				<ExplanationUI/>
@@ -38,9 +51,7 @@ function App() {
 				{/*<p className="subtitle">ESTIMATOR HYPERPARAMETERS</p>			
 				<p className="description">In this section, tweak estimator hyperparameters.</p>*/}				
 				<ResponseUI/>
-			</div>
-												
-			
+			</div>															
 		</div>
 	);
 }

@@ -48,29 +48,7 @@ function FelzenszwalbUI(props){
 					</div>
 				</fieldset>
 				</div>
-
-								  
-								  <div className="ui_item" >
-					<fieldset className="fieldset">
-						<legend className="legend">channel_axis</legend>
-						<div className="input">
-							<input id="channel_axis_felzenszwalb" type="text" defaultValue="-1"></input>
-						</div>
-						<div className="description">
-							<p className="type">Integer, default: -1</p>
-							<br></br>
-							<p>Tolerance for stopping criteria.</p>
-							<p>Multiple values can be entered.</p>
-							<p>Separate each value with a comma, e.g. <i>"1e-4, 1e-3, ..."</i></p>
-						</div>
-					</fieldset>
-				</div>
-
-
-			
-			
 				
-			 
 			</div>
 		</div>
 );}

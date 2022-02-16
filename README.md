@@ -2,160 +2,123 @@
 
 Clone the project:
 
-`git clone https://github.com/tavetisyan95/mlflow_web_app.git`
+`git clone https://github.com/tavetisyan95/lime_web_app.git`
 
 
 ## Set the `api_url`
 
-In the directory `app/MLflow_web_app/src/` inside `config.js`, edit the API URL, if necessary:
+In the directory `app/lime_web_app/src/` inside `config.js`, edit the API URL, if necessary:
 
 ```
 export const config = {
   api_url: "localhost",
   api_port: 5000,
   http_server_port: 8080,
-  api_training_endpoint: "track-experiment",
-  api_inference_endpoint: "deploy-model"
+  api_explain_endpoint: "/explain/",
+  api_model_upload_endpoint: "/upload-model/",
+  api_image_upload_endpoint: "/upload-images/"
 };
+
 ```
 
 Don't put any http or backslashes in the api_url.
 
-NOTE: If you want to use different ports for the Flask API or http-server, set them here.
+NOTE: If you want to use different ports for the API or http-server, set them here.
 
 
 ## Install Dependencies and Start Web Servers
 
 Run the following in terminal:
 
-`bash start.sh 4000`
+`bash start.sh`
 
-`4000` indicates the port that the MLflow UI will be run on. This UI is separate from our app and is a product of the MLflow team.
+NOTE: Make sure that ports 3000, 5000, and 8080 are publicly available and unused by other processes. If not, either free them up or use other ports.
 
-You may enter another port number if you wish, except for 3000, 5000, and 8080. These are used by our React app, the Flask web server, and http-server respectively.
-
-NOTE: Make sure that ports 3000, 4000, 5000, and 8080 are publicly available and unused by other processes. If not, either free them up or use other ports.
-
-The app and the MLflow UI should launch in your web browser. If they don't, navigate to http://localhost:3000 (for our app) and http://localhost:4000 (for the MLflow UI).
+The app should launch in your web browser. If it doesn't, navigate to http://localhost:3000.
 
 The app will have been fully launched once its webpage opens in the browser.
 
 
-## Configuring the estimator
+## 1. Uploading model weights and architecture
 
-By default, the React app launches in training mode:
+After the app is running, the first thing to do is to upload your TensorFlow Keras model weights and architecture. 
 
-![Image](images/app-launch-mode.jpg)
+![Image](screenshots/model_upload.jpg)
 
-Before you can do inference, you need to run scikit-learn's grid search algorithm and get the best trained estimator.
+Test weights and architecture are provided in the directory `/models` for two models - one trained on MNIST digits and the other trained on CIFAR10.
 
-To start training, you need to:
+To upload model weights and architecture, click on the respective `UPLOAD` button and select the correct file under `/models`. Make sure to select the correct combination of weights and architecture - wrong combinations will not work because the model input shapes are different.
 
-1. Select the desired estimator.
-2. Select a training dataset.
-3. Enter an experiment name to log the models under.
-4. Select grid search parameters.
-5. Select estimator hyperparameters for grid search to try.
+Model weights are expected in `.h5` format, while architecture is expected in `.json` format.
 
-### 1. Selecting an estimator
+To get model weights, call the method `.save` of your `Model` or `Sequential` object.
 
-Our app implements two scikit-learn estimators:
+To get the model architecture, call the method `.to_json` of your `Model` or `Sequential` object.
 
-- `sklearn.linear_model.LogisticRegression`.
-- `sklearn.linear_model.LinearRegression`.
+After you select the files, click `Upload model`. If the operation is successful, you will see `Model uploaded!` under `RESPONSE`.
 
-Use the dropdown list under `Estimator` to select the desired algorithm:
+## 2. Uploading images
 
-![Image](images/choose-estimator.jpg)
+Next, upload images.
 
-### 2. Selecting a training dataset setting grid search parameters
+![Image](screenshots/images_upload.jpg)
 
-Click on the `UPLOAD` button to select a training dataset.
+Test images are provided for each of the classes of MNIST digits and CIFAR10. You can find these under `images/mnist` and `images/cifar` respectively.
 
-![Image](images/choose-file.jpg)
+Click `UPLOAD` under `Images`, navigate to the folder that corresponds to the model you uploaded, and select the images for upload.
 
-You can find two CSVs for training in the root directory of the project - `dataset_classification_training.csv` and `dataset_regression_training.csv`. They are intended for classification and regression respectively.
+You should ideally uploading images for EVERY available class. This isn't necessary if you want to just explain a specific class.
 
-The app expects datasets in a CSV file with a column header. The label column should be named "Target". Feature column names can be anything.
+The app expects uint8-encoded JPEG images. The pixel values in the images should range from 0 to 255 - they should NOT be normalized.
 
-Note that there should be no column for indices in the CSV file. The app doesn't handle index columns. The dataset should look like this:
+The provided test images were saved using the following piece of Python code:
 
-![Image](images/dataset_example.jpg)
+```
+# Writing images to disk
+for i in range(len(images)):    
+    tf.io.write_file(f"digit_{i}.jpg", tf.image.encode_jpeg(images[i]))    
+```
 
-When using pandas, you would get the correct CSV structure by using a statement like this:
+After you select images, click `Upload images`. If the operation is successful, you will see `Images uploaded!` under `RESPONSE`.
 
-`dataset_df.to_csv("dataset.csv", index=False)`
+## 3. Selecting a segmentation algorithm and adjusting parameters
 
-### 3. Entering an experiment name
+Next, you can select a segmentation algorithm to generate explanations with. You can choose between `quickshift`, `felzenszwalb`, and `slic` - all the three algorithms supported by LIME.
 
-By default, all runs are logged to an experiment named "Experiment". To keep runs organized, you can enter a name of your own choosing.
+![Image](screenshots/segmenter.jpg)
 
-![Image](images/enter-experiment-name.jpg)
+Select an algorithm by using the dropdown ist under `Segmenter`. Then, adjust the available parameters if you want. The default parameters in the app produce decent explanations for both CIFAR10 and MNIST images.
 
-### 4. Selecting grid search parameters
+To find out more about the meaning of the available parameters, consult scikit-image docs.
 
-Our app implements the following parameters of scikit-learn's `GridSearchCV`:
+## 3. Adjusting explanation parameters
 
-- `n_jobs`. The number of CPU cores that will be used during training. The value you enter here is passed not only to `GridSearchCV` but also to the estimator you selected.
-- `cv`. The number of cross-validation folds.
-- `return_train_score`. Whether or not training scores should be tracked.
+![Image](screenshots/explainer.jpg)
 
-The default values of these parameters work - no need to change them.
+As the last step, you can adjust the parameters for explanation. Here are a few things to keep in mind here:
 
-### 5. Selecting estimator hyperparameters
+- `Image indices` determines which of the images you uploaded the app will generate explanations for. If you type `0, 1, 3`, you will get explanations for images under the indices 0, 1, and 3.
+- `Top labels` determines the number of predictions for the uploaded images that LIME will store. If you type `3`, LIME will store the top 3 predictions with the highest probabilities. `Top labels` should be equal to or less than the total number of classes that your models was trained to predict.
+- `Top predictions` determines the number of predictions from the stored `Top labels` that you want to explain. If you type `3`, LIME will generate explanations for the top 3 predictions. `Top predictions` should be equal to or less than `Top labels`.
+- `Labels to explain` determines which labels LIME should generate explanations for. If `None`, LIME will generate explanations with respect to the stored `Top labels`. If NOT `None`, LIME will generate explanations with respect to the provided values. If you want to generate explanations with respect to classes 0, 3, and 8, you would pass `0, 3, 8` to `Labels to explain`. Note that if `Labels to explain` is NOT `None`, there should only be ONE value under `Image indices`.
+- `Number of samples` determines the size of the neighborhood that LIME will generate to explain images. Higher values might improve explanation clarity but will increase the amount of time necessary to generate explanations.
 
-To tweak estimator hyperparameters, scroll down until you reach the `ESTIMATOR HYPERPARAMETERS` section. You'll see the hyperparameters for the estimator you choose on step 2.
+After you've adjusted the parameters, click `Explain`. Once explanations are generated, you will see `Explanations ready!` under `RESPONSE`, as well as generated explanations under `Explanation`.
 
-You can tweak most of the hyperparameters implemented in `LogisticRegression` and `LinearRegression`.
+![Image](screenshots/explanation.jpg)
 
-Follow the instructions under each hyperparameter. For some hyperparameters, you can enter several values/select several options for grid search to try.
-
-For testing purposes, the default hyperparameter values work - there is no need to change them.
-
-## Training grid search
-
-Once you are done with the previous steps, scroll back up and click `Train Grid Search`.
-
-While training is in progress, you will see the message `Training` under `RESPONSE`. Once training is complete, you will see `Training complete!`
-
-![Image](images/training-complete.jpg)
-
-You should now be able to see logged runs in the MLflow UI.
-
-
-## Doing inference with trained models
-
-To do inference with the trained models, scroll to the top of the app and select `Prediction` under `Mode`. You will see something like this:
-
-![Image](images/prediction-ui.jpg)
-
-To start inferece, do the following:
-
-1. Click the `UPLOAD` button and upload a dataset to do predictions with. You can find two test CSV datasets in the root directory of the repo - `dataset_classification_prediction.csv` and `dataset_regression_prediction.csv`
-2. Enter the name of the file that predictions should be saved to. The app is intended to save predictions to CSV files, but other formats might work as well.
-3. Select the experiment under which the desired model has been saved. Once you select an experiment, you will see run IDs that were logged under it.
-4. Select the run ID of the desired model. 
-
-
-Then, click `Deploy` - this will load the best estimator trained logged under the selected experiment and run ID. Note that if you will be re-using the same model for predictions, there's no need to re-deploy it every time before inference. But if you want to use another model, you will need to select its ID and deploy it.
-
-Once this is done, click `Predict`. Once prediction is complete, you will see the name of the CSV file with predictions under `Saved prediction files`.
-
-![Image](images/saved-prediction-files.jpg)
-
-Click on the desired filename to download it to your machine.
-
-## Terminating the app
-
-If you terminate the app from the terminal, all saved prediction files and MLflow logs will be deleted.
+You can save the explanation by right-clicking on it and selecting `Save image as` or `Copy image`.
 
 ## LIMITATIONS OF THE APP
 
 In its current implementation, the app has some notable limitations, including:
 
 - No error messages pop up on the webpage if something goes wrong. The only source of information about errors is the app's terminal.
-- Invalid inputs for hyperparameters aren't handled. No error messages are shown in the web browser. The only way to know that something has gone wrong is through terminal logs.
-- Not all parameters of `LogisticRegression` and `LinearRegression` have been implemented in the app.
+- The app only supports TF/Keras models, and it only supports JPEG images.
+- When `Labels to explain` is NOT `None`, the app can only generate explanations for one image index.
+- The only preprocessing step done on uploaded images is normalization by dividing the pixel values by 255.0.
+- Invalid inputs for parameters aren't handled. No error messages are shown in the web browser. The only way to know that something has gone wrong is through terminal logs.
+- Not all parameters of the supported segmentation algorithms were included in the app.
 
 ## Starting in Docker
 ```docker-compose -f docker-compose.yaml up -d --build```

@@ -16,7 +16,7 @@ function ImageUploadUI(props){
 						<div className="description">
 							<br></br>
 							<p>The images that you want to generate explanations for.</p>
-							<p>RGB images expected, with -1 being the channel axis.</p>
+							<p>RGB JPEG images expected with the channel axis being -1.</p>
 						</div>
 					</fieldset>
 				</div>

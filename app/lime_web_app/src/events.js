@@ -43,9 +43,7 @@ export const events = {
 		} else if (algoType == "slic"){
 			segmenterParams = events.handleSlic();
 		} 
-	  	
-
-		
+	  			
 		// Storing all arguments in a body
 	    var body = {explanation_params: {image_index: imageIndices,
 										top_labels: topLabels,
@@ -88,7 +86,7 @@ export const events = {
 	},
   	// Function for uploading model files 
   	uploadModel: function(){
-		  // Getting the model architecture and weights		  
+		// Getting the model architecture and weights		  
 		var arch = document.getElementById("model_arch").files[0];
 		var weights = document.getElementById("model_weights").files[0];
 		
@@ -129,25 +127,21 @@ export const events = {
 				headers: {"Accept": "application/json",
 						"Content-Type": "multipart/form-data"}})*/
 						
-		// Uploading the model files to the server		   
-		var url = "http://" + config.api_url + ":" + config.api_port + config.api_model_upload_endpoint
-		
-		console.log(url);
-
+		// Uploading the model files to the server		   					
 		fetch("http://" + config.api_url + ":" + config.api_port + config.api_model_upload_endpoint,
 				{method: "POST",	
 				body: formData
-		})	
+		})		
 		.then(() => {
 			// Making the Upload button visible
 			uploadButton.style.visibility = "visible";
 
 			// Showing a success message
 			responseArea.innerText = "Model loaded!"})
-		.catch(error => {		  
-			console.error('Error: ', error);
+		.catch(error => {		  			
 			uploadButton.style.visibility = "visible"
 			responseArea.innerText = "Something went wrong!"
+			console.error('Error: ', error);
 		});	  
   	},
   	// Function for uploading images

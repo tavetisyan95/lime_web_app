@@ -287,7 +287,7 @@ async def upload_images(images: List[UploadFile] = File(...)):
         app.original_images.append(image)
 
 
-import uvicorn
+"""import uvicorn
 
 if __name__ == "__main__":
-    uvicorn.run("lime-api:app", port=5000, reload=True)
+    uvicorn.run("lime-api:app", port=5000, reload=True)"""

@@ -167,23 +167,15 @@ input {
 	padding-left: 5px;
 }
 
-#data, #prediction_data {
+#model_weights, #model_arch, #images {
 	visibility: hidden;
 }
 
-#data_shown, #prediction_data_shown {
+#upload_image_button, #upload_model_button {
 	height: auto;
 	width: auto;
 	padding: 10px;
 	background: tomato;
-	color: whitesmoke;
-}
-
-#log_area {
-	background: #161633;
-	overflow: scroll;
-	margin: 0px !important;
-	border-radius: 8px;
 	color: whitesmoke;
 }
 

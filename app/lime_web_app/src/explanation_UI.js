@@ -31,7 +31,8 @@ function ExplanationUI(props) {
 					<div className="description">
 						<p className="type">Integer, default: 10</p>
 						<br></br>
-						<p>The number of predictions with the highest probabilities that LIME should produce explanations for.</p>
+						<p>The number of predictions with the highest probabilities that LIME should store.</p>
+						<p>Should be equal to or less than the number of classes that the model was trained to predict.</p>
 					</div>
 				</fieldset>
 			</div>
@@ -47,6 +48,7 @@ function ExplanationUI(props) {
 						<p className="type">Integer, default: 3</p>
 						<br></br>
 						<p>The number of predictions with the highest probabilities that you want to see explanations for.</p>
+						<p>Should be equal to or less than <i>Top labels</i></p>
 					</div>
 				</fieldset>
 			</div>	  
@@ -63,6 +65,9 @@ function ExplanationUI(props) {
 						<br></br>
 						<p>The labels with respect to which you want to see explanations for.</p>
 						<p>If <i>None</i>, explanations for top predictions will be produced instead.</p>
+						<p>Multiple values can be entered.</p>
+						<p>Separate each value with a comma, e.g. <i>"0, 1, 2, ...".</i></p>
+						<p>When not <i>None</i>, make sure that only one value is entered in <i>Image indices</i></p>
 					</div>
 				</fieldset>
 			</div>	  

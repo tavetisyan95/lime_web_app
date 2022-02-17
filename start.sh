@@ -8,6 +8,7 @@ uvicorn lime-api:app --reload --port 5000 &
 cd ..
 npx http-server ./outputs/ --cors -c-1 -s &
 cd app/lime_web_app
+npx install axios
 npm install axios
 npx yarn install
 npx yarn start

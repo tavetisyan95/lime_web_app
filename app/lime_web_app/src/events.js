@@ -21,7 +21,6 @@ export const events = {
 		// Getting the object that will store the explanations
 		var img = document.getElementById("explanation_image");
 	
-
 		// Removing any old explanations
 		img.src = "";	
 		
@@ -55,12 +54,11 @@ export const events = {
 										hide_rest: hideRest}, 
 					segmenter_params:{args: segmenterParams}}
 			
-		// Sending a request to the server to generate explanations
-		fetch("http://" + config.api_url + ":" + config.api_port + config.api_explain_endpoint,
-				{method: "POST",
-				headers: {"Content-Type": "application/json"},
-				body: JSON.stringify(body)
-		})	
+		// Sending a request to the server to generate explanations	
+		axios({method: "post",
+			 url: "http://" + config.api_url + ":" + config.api_port + config.api_explain_endpoint,
+			 data: JSON.stringify(body),
+			 headers: {"Content-Type": "application/json"}})
 	 	.then(() => {
 			// Displaying the explanation
 			img.src = "http://" + config.api_url + ":" + config.http_server_port + "/explanation.jpg/";  
@@ -76,13 +74,7 @@ export const events = {
 			console.error('Error: ', error);
 			explainButton.style.visibility = "visible"		  
 		  	responseArea.innerText = "Something went wrong!"
-	  	});
-	  
-	  
-	  /*axios({method: "post",
-			 url: "http://localhost:5000/explain/",
-			 data: JSON.stringify(body),
-			 headers: {"Content-Type": "application/json"}})*/
+	  	});	  
 	},
   	// Function for uploading model files 
   	uploadModel: function(){
@@ -96,42 +88,19 @@ export const events = {
 
 		// Hiding the Upload button and updating the status message
 		uploadButton.style.visibility = "hidden"
-		responseArea.innerText = "Uploading model..."
-		
-		/*
-		axios.defaults.headers.post['Content-Type'] = "application/json";
-		
-		axios.post("http://localhost:5000/post/", formData)
-		.then(res => res.json())
-		.then(res => console.log(res))
-		.catch(function (error) {
-			console.log(error.response);
-		});*/
+		responseArea.innerText = "Uploading model..."				
 		
 		// Creating form data and adding the model files under the required keys
 		var formData = new FormData();
 		formData.append('weights', weights);
 		formData.append('arch', arch);	  
-		
-		/*axios.post("http://localhost:5000/post_test/", formData)
-		.then(res => res.json())
-		.then(res => console.log(res))
-		.catch(function (error) {
-			console.log(error.response);
-		});*/
-		
-		
-		/*axios({method: "post",
-				url: "http://localhost:5000/post_test/",
-				data: formData,
-				headers: {"Accept": "application/json",
-						"Content-Type": "multipart/form-data"}})*/
 						
 		// Uploading the model files to the server		   					
-		fetch("http://" + config.api_url + ":" + config.api_port + config.api_model_upload_endpoint,
-				{method: "POST",	
-				body: formData
-		})		
+		axios({method: "post",
+			 url: "http://" + config.api_url + ":" + config.api_port + config.api_model_upload_endpoint,
+			 data: formData,
+			 headers: {"Accept": "application/json",
+					   "Content-Type": "multipart/form-data"}})
 		.then(() => {
 			// Making the Upload button visible
 			uploadButton.style.visibility = "visible";
@@ -168,11 +137,7 @@ export const events = {
 			 url: "http://" + config.api_url + ":" + config.api_port + config.api_image_upload_endpoint,
 			 data: formData,
 			 headers: {"Accept": "application/json",
-					   "Content-Type": "multipart/form-data"}})
-					   
-		/*fetch("http://localhost:5000/upload-images/",
-			{method: "POST",
-			body: formData})*/		
+					   "Content-Type": "multipart/form-data"}})	
 		.then(() => {
 			// Making the image Upload button visible
 			uploadButton.style.visibility = "visible"

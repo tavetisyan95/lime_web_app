@@ -89,7 +89,7 @@ Next, you can select a segmentation algorithm to generate explanations with. You
 
 Select an algorithm by using the dropdown list under `Segmenter`. Then, adjust the available parameters if you want. The default parameters in the app produce decent explanations for both CIFAR10 and MNIST images.
 
-To find out more about the meaning of the available parameters, consult the [scikit-image docs] (https://scikit-image.org/docs/stable/api/skimage.segmentation.html).
+To find out more about the meaning of the available parameters, consult the [scikit-image docs](https://scikit-image.org/docs/stable/api/skimage.segmentation.html).
 
 ## 3. Adjusting explanation parameters
 

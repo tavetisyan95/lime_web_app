@@ -8,7 +8,7 @@ uvicorn lime-api:app --reload --port 5000 &
 cd ..
 npx http-server ./outputs/ --cors -c-1 -s &
 cd app/lime_web_app
-npm install papaparse
+npm install axios
 npx yarn install
 npx yarn start
 npx kill-port 3000 

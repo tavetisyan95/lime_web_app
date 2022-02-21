@@ -56,9 +56,8 @@ def explain(explanation_params: Explanation,
     elif explanation_params.labels_to_explain != "None":
         # If yes, explain prediction with respect to provided labels               
         explain_images_with_respect_to_labels(explanation_params)
-    
-    # Returning an OK code
-    return 200
+
+## UTILITY FUNCTIONS FOR EXPLANATION GENERATION
 
 # Function for explanining images with respect to provided labels
 def explain_images_with_respect_to_labels(explanation_params):
@@ -195,30 +194,7 @@ def explain_images_with_respect_to_predictions(explanation_params):
 # Function for creating the segmenter
 def create_segmenter(segmenter_params):    
     # Returning a segmenter
-    return SegmentationAlgorithm(**segmenter_params)   
-
-# Endpoint for uploading model files
-@app.post("/upload-model/")
-async def load_model(weights: UploadFile = File(...), arch: UploadFile = File(...)):
-    # Writing the received model file to server storage
-    async with aiofiles.open('../outputs/received_model.h5', 'wb') as out_file:
-        # Read the model weights in bytes
-        content = await weights.read()
-
-        # Write the weights to server storage
-        await out_file.write(content)
-
-    # Read the model architecture in bytes
-    model_arch = await arch.read()
-    
-    # Load the model architecture from bytes
-    app.model = tf.keras.models.model_from_json(model_arch)
-
-    # Compile the model
-    app.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-
-    # Load the weights saved earlier
-    app.model.load_weights('../outputs/received_model.h5')    
+    return SegmentationAlgorithm(**segmenter_params)     
     
 # Function for generating LIME explanations
 def generate_explanations(segmenter_params,
@@ -264,7 +240,29 @@ def generate_explanations(segmenter_params,
                                                            segmentation_fn=segmenter,
                                                            random_seed=5,
                                                            progress_bar=False))
+
+# Endpoint for uploading model files
+@app.post("/upload-model/")
+async def load_model(weights: UploadFile = File(...), arch: UploadFile = File(...)):
+    # Writing the received model file to server storage
+    async with aiofiles.open('../outputs/received_model.h5', 'wb') as out_file:
+        # Read the model weights in bytes
+        content = await weights.read()
+
+        # Write the weights to server storage
+        await out_file.write(content)
+
+    # Read the model architecture in bytes
+    model_arch = await arch.read()
     
+    # Load the model architecture from bytes
+    app.model = tf.keras.models.model_from_json(model_arch)
+
+    # Compile the model
+    app.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+
+    # Load the weights saved earlier
+    app.model.load_weights('../outputs/received_model.h5')     
     
 # Endpoint for uploading images
 @app.post("/upload-images/")

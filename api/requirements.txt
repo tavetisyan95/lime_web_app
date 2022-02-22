@@ -6,5 +6,4 @@ aiofiles
 matplotlib
 tensorflow==2.7.0
 numpy
-pandas
 git+https://github.com/marcotcr/lime.git

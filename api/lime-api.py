@@ -13,7 +13,7 @@ import aiofiles
 
 # Request body for explanation args
 class Explanation(BaseModel):
-    image_index: str
+    image_indices: str
     top_labels: int
     num_samples: int
     top_predictions: int
@@ -185,7 +185,7 @@ def explain_images_with_respect_to_labels(explanation_params):
     fig.set_size_inches(w=4 * cols, h=3 * rows)
     
     # Getting the explanation that corresponds to the provided image index
-    explanation = explanations[int(explanation_params.image_index)]
+    explanation = explanations[int(explanation_params.image_indices)]
     
     # Setting a counter to keep track of provided labels
     counter = 0
@@ -231,7 +231,7 @@ def explain_images_with_respect_to_predictions(explanation_params):
     explanations = app.explanations
 
     # Breaking down the long string with image indices into a list of string indices
-    image_indices = explanation_params.image_index.split(sep=',')    
+    image_indices = explanation_params.image_indices.split(sep=',')    
     
     # Converting the string image indices to integers
     for i in range(len(image_indices)):

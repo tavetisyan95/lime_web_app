@@ -44,7 +44,7 @@ export const events = {
 		} 
 	  			
 		// Storing all arguments in a body
-	    var body = {explanation_params: {image_index: imageIndices,
+	    var body = {explanation_params: {image_indices: imageIndices,
 										top_labels: topLabels,
 										top_predictions: topPredictions,
 										labels_to_explain: labelsToExplain,

@@ -77,10 +77,10 @@ function ExplanationUI(props) {
 				<fieldset className="fieldset">
 					<legend className="legend">Number of samples</legend>
 					<div className="input">
-						<input id="num_samples" type="text" defaultValue="250"></input>
+						<input id="num_samples" type="text" defaultValue="50"></input>
 					</div>
 					<div className="description">
-						<p className="type">Integer, default: 250</p>
+						<p className="type">Integer, default: 50</p>
 						<br></br>
 						<p>The size of the neighborhood data to generate for explanations.</p>
 					</div>

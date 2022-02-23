@@ -39,7 +39,7 @@ function FelzenszwalbUI(props){
 				<fieldset className="fieldset">
 					<legend className="legend">Min size</legend>
 					<div className="min_size">
-						<input id="scale_felzenszwalb" type="text" defaultValue="20"></input>
+						<input id="min_size" type="text" defaultValue="20"></input>
 					</div>
 					<div className="description">
 						<p className="type">Integer, default: 20</p>

@@ -4,6 +4,6 @@ python-multipart
 pydantic
 aiofiles
 matplotlib
-tensorflow==2.7.0
+tensorflow>=2.7.0
 numpy
 git+https://github.com/marcotcr/lime.git

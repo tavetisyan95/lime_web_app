@@ -1,3 +1,5 @@
+This repository contains the project for the post `Explainable AI Framework Comparison Part 3: Using LIME in a React Application` ([link](https://kedion.medium.com/explainable-ai-framework-comparison-106c783554a)) on the Kedion blog on Medium.
+
 ## Clone Project
 
 Clone the project:
